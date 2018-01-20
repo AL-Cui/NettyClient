@@ -45,7 +45,7 @@ public class HeartBeatsClient extends Thread {
     public void connect(int port, String host) throws Exception {
         idleStateTrigger = new ConnectorIdleStateTrigger(macAddress);
         logger.info(macAddress);
-        EventLoopGroup group = new NioEventLoopGroup();
+        EventLoopGroup group = new NioEventLoopGroup(1);
 
         boot = new Bootstrap();
         boot.group(group).channel(NioSocketChannel.class).handler(new LoggingHandler(LogLevel.INFO));

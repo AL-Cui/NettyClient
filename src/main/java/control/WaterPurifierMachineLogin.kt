@@ -73,9 +73,9 @@ class WaterPurifierMachineLogin {
     fun createRequest(macId: String, boxId: String, pass: String) {
 
         val requestString = setXmlInfo(macId, boxId, pass)
-        if (logger.isDebugEnabled) {
-            logger.debug("机器登录发送的xml：" + requestString)
-        }
+
+        logger.info("机器登录发送的xml：" + requestString)
+
         val request = Request.Builder()
                 .url(Url2)
                 .post(RequestBody.create(MEDIA_XML_APPLICATION, requestString))
@@ -83,9 +83,9 @@ class WaterPurifierMachineLogin {
         val call = mOkHttpClient2.newCall(request)
         call.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                if (logger.isDebugEnabled) {
-                    logger.debug("机器的MAC地址==" + macId + "机器登录时的请求失败的原因==" + e.toString())
-                }
+
+                logger.info("机器的MAC地址==" + macId + "机器登录时的请求失败的原因==" + e.toString())
+
             }
 
             @Throws(IOException::class)
@@ -94,9 +94,9 @@ class WaterPurifierMachineLogin {
                 val resultString = response.body().string()
                 val str = response.networkResponse().toString()
 
-                if (logger.isDebugEnabled) {
-                    logger.debug("机器的MAC地址==" + macId + "机器登录返回的结果代码：" + str + resultString)
-                }
+
+                logger.info("机器的MAC地址==" + macId + "机器登录返回的结果代码：" + str + resultString)
+
             }
 
         })
@@ -126,21 +126,21 @@ class WaterPurifierMachineLogin {
         val data = root.addElement(Util.DATA)
         val checkctrl = data.addElement(Util.CHECKCTRL)
 
-        checkctrl.setAttributeValue("version", "1.0")
-        checkctrl.setAttributeValue("boxid", boxId)
+        checkctrl.addAttribute("version", "1.0")
+        checkctrl.addAttribute("boxid", boxId)
         val devinfo = checkctrl.addElement(Util.DEVINFO)
         val echodev = devinfo.addElement(Util.ECHODEV)
-        echodev.setAttributeValue("node", idString)
-        echodev.setAttributeValue("register", "true")
+        echodev.addAttribute("node", idString)
+        echodev.addAttribute("register", "true")
         echodev.text = "013501"
 
         val devctrl = checkctrl.addElement(Util.DEVCTRL)
         val echo = devctrl.addElement(Util.ECHO)
-        echo.setAttributeValue("node", idString)
+        echo.addAttribute("node", idString)
 
         echo.text = "01350105ff01721480013081010082040000450084020000850400000000860c080000050000000000000000880142890200008a030000058b033130348c0c4650434837300000000000009d0a098081868889a0c0f2f39e05048081a0f39f111495818180010101000101010101020202a00141c00142f0200580007f04000000000000000000000000000000000000000000000000000000f12864000014320200022f0000000000060000000000060000000b000000000000000000000000000000f22800600000000000000000000000000000000003640000000000ff0017010000000000000000000000f3080000000000000000"
         val boxconf = checkctrl.addElement(Util.BOXCONF)
-        boxconf.setAttributeValue("check_boxid_deleted", "true")
+        boxconf.addAttribute("check_boxid_deleted", "true")
 
 
         return writeDoc.asXML()

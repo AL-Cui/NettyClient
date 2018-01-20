@@ -51,12 +51,12 @@ class WaterPurifierBinding {
         val trustManager = trustManagers[0] as X509TrustManager
 
         var mBuilder = OkHttpClient.Builder()
-        mBuilder.sslSocketFactory(createSSLSocketFactory(),trustManager)
+        mBuilder.sslSocketFactory(createSSLSocketFactory(), trustManager)
         mBuilder.hostnameVerifier(TrustAllHostnameVerifier())
         mBuilder.cookieJar(object : CookieJar {
             private val cookieStore = HashMap<HttpUrl, List<Cookie>>()
             override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
-                logger.debug("绑定时捕捉到的cookie=" + cookies.toString())
+                logger.info("绑定时捕捉到的cookie=" + cookies.toString())
 //                if (cookies.size == 2) {
 //                    cookieStore.put(url, cookies)
 //                }
@@ -65,7 +65,7 @@ class WaterPurifierBinding {
 
             override fun loadForRequest(url: HttpUrl): List<Cookie> {
                 val cookies = cookieStore[url]
-                logger.debug("绑定时发送的cookie=" + cookies.toString())
+                logger.info("绑定时发送的cookie=" + cookies.toString())
                 return cookies ?: ArrayList()
             }
         })
@@ -89,9 +89,9 @@ class WaterPurifierBinding {
     fun boxIDCreateFirstRequest(macId: String): Array<String> {
 
         val postString = setXmlInfo1(macId)
-        if (logger.isDebugEnabled) {
-            logger.debug("绑定时第一个请求发送的参数==" + postString)
-        }
+
+        logger.info("绑定时第一个请求发送的参数==" + postString)
+
         val request = Request.Builder()
 //                .url("https://shcloud-rd.sharp.cn/hems/upload/api/monitoring")
                 .url(Url2)
@@ -100,9 +100,8 @@ class WaterPurifierBinding {
         val call = mOkHttpClient2.newCall(request)
         call.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                if (logger.isDebugEnabled) {
-                    logger.debug("机器的MAC地址==" + macId + "绑定时的第一个请求失败的原因==" + e.toString())
-                }
+                logger.info("机器的MAC地址==" + macId + "绑定时的第一个请求失败的原因==" + e.toString())
+
             }
 
             @Throws(IOException::class)
@@ -112,9 +111,9 @@ class WaterPurifierBinding {
                 val str = response.networkResponse().toString()
                 resultList[0] = boxId
                 resultList[1] = boxIdCreateSecondRequest(boxId, macId)
-                if (logger.isDebugEnabled) {
-                    logger.debug("机器的MAC地址==" + macId + "绑定时的第一个请求结果==" + str + resultString)
-                }
+
+                logger.info("机器的MAC地址==" + macId + "绑定时的第一个请求结果==" + str + resultString)
+
 
             }
 
@@ -126,9 +125,9 @@ class WaterPurifierBinding {
     fun boxIdCreateSecondRequest(boxId: String, macId: String): String {
         var passString = ""
         val postString = setXmlInfo2(macId, boxId)
-        if (logger.isDebugEnabled) {
-            logger.debug("绑定时第二个请求发送的参数==" + postString)
-        }
+
+        logger.info("绑定时第二个请求发送的参数==" + postString)
+
         val request = Request.Builder()
                 .url(Url2)
                 .post(RequestBody.create(MEDIA_XML_APPLICATIOON, postString))
@@ -136,18 +135,18 @@ class WaterPurifierBinding {
         val call = mOkHttpClient2.newCall(request)
         call.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                if (logger.isDebugEnabled) {
-                    logger.debug("机器的MAC地址==" + macId + "绑定时的第二个请求失败的原因==" + e.toString())
-                }
+
+                logger.info("机器的MAC地址==" + macId + "绑定时的第二个请求失败的原因==" + e.toString())
+
             }
 
             @Throws(IOException::class)
             override fun onResponse(call: Call, response: Response) {
                 val str = response.networkResponse().toString()
                 val resultString = response.body().string()
-                if (logger.isDebugEnabled) {
-                    logger.debug("机器的MAC地址==" + macId + "绑定时第二个请求返回结果==" + str + resultString)
-                }
+
+                logger.info("机器的MAC地址==" + macId + "绑定时第二个请求返回结果==" + str + resultString)
+
                 val list = parserXmlpass(resultString)
                 resultList[1] = list[0]
                 passCreateThirdRequest(list[0], macId, boxId, list[1])
@@ -159,9 +158,9 @@ class WaterPurifierBinding {
 
     private fun passCreateThirdRequest(pass: String, macId: String, boxId: String, centerAddress: String) {
         val postString = setXmlInfo3(macId, pass, centerAddress)
-        if (logger.isDebugEnabled) {
-            logger.debug("绑定时第三个请求发送的参数==" + postString)
-        }
+
+        logger.info("绑定时第三个请求发送的参数==" + postString)
+
         val request = Request.Builder()
                 .url(Url2)
                 .post(RequestBody.create(MEDIA_XML_APPLICATIOON, postString))
@@ -169,18 +168,18 @@ class WaterPurifierBinding {
         val call = mOkHttpClient2.newCall(request)
         call.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                if (logger.isDebugEnabled) {
-                    logger.debug("机器的MAC地址==" + macId + "绑定时的第三个请求失败的原因==" + e.toString())
-                }
+
+                logger.info("机器的MAC地址==" + macId + "绑定时的第三个请求失败的原因==" + e.toString())
+
             }
 
             @Throws(IOException::class)
             override fun onResponse(call: Call, response: Response) {
                 val str = response.networkResponse().toString()
                 val resultString = response.body().string()
-                if (logger.isDebugEnabled) {
-                    logger.debug("机器的MAC地址==" + macId + "绑定时第三个请求返回结果==" + str + resultString)
-                }
+
+                logger.info("机器的MAC地址==" + macId + "绑定时第三个请求返回结果==" + str + resultString)
+
                 WaterPurifierMachineLogin().createRequest(macId, boxId, pass)
             }
         })
@@ -216,7 +215,7 @@ class WaterPurifierBinding {
     fun parserXmlpass(XMLString: String): Array<String> {
 
         var secondResultList: Array<String> = Array(2, { "" })
-        var pass = ""
+        var pass: String
 
         try {
             val readDoc = DocumentHelper.parseText(XMLString)
@@ -261,8 +260,8 @@ class WaterPurifierBinding {
         val data = root.addElement(Util.DATA)
         val memboption = data.addElement(Util.MEMBOPTION)
 
-        memboption.setAttributeValue("force_create_id", "true")
-        memboption.setAttributeValue("app_secret", "orCPmn4UHx5bptZm1mmEUQ3XC1q%2BI%2B3gRdCVX4YfTEY%3D")
+        memboption.addAttribute("force_create_id", "true")
+        memboption.addAttribute("app_secret", "orCPmn4UHx5bptZm1mmEUQ3XC1q%2BI%2B3gRdCVX4YfTEY%3D")
         return writeDoc.asXML()
     }
 

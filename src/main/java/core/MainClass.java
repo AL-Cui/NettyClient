@@ -1,8 +1,5 @@
 package core;
 
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.Util;
@@ -17,7 +14,7 @@ public class MainClass {
 
     public static void main(String[] args) {
 //        File file = new File("/MyData/queen2/result.txt");
-//        File file = new File("/data/queen2/result.txt");
+//        File file = new File("/data/queen7/result.txt");
         File file = new File("/Users/cuiduo/Downloads/result.txt");    //存放生成的机器相关属性
 //        File file = new File("/home/iot/MyData/machine/result.txt");
         PrintStream ps = null;
@@ -32,12 +29,12 @@ public class MainClass {
                 logger.info(macAddress);
                 String text = "FS-E85E-W:" + macAddress;
                 ps.println(text);
-//                HeartBeatsClient client = new HeartBeatsClient(macAddress);
+                HeartBeatsClient client = new HeartBeatsClient(macAddress);
 
 //bootstrap和EventLoopGroup的复用测试
-                Bootstrap bootstrap = new Bootstrap();
-                EventLoopGroup group = new NioEventLoopGroup(8);
-                HeartBeatsClientTest client = new HeartBeatsClientTest(macAddress,bootstrap,group);
+//                Bootstrap bootstrap = new Bootstrap();
+//                EventLoopGroup group = new NioEventLoopGroup(1);
+//                HeartBeatsClientTest client = new HeartBeatsClientTest(macAddress,bootstrap,group);
                 client.start();
                 Thread.sleep(10);
             } catch (InterruptedException e) {

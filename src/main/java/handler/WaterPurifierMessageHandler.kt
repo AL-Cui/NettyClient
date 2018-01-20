@@ -69,6 +69,8 @@ class WaterPurifierMessageHandler(private val macAddress: String): SimpleChannel
                             if (logger.isDebugEnabled) {
                                 logger.debug("收到控制指令")
                             }
+                            //睡眠200ms
+                            Thread.sleep(50)
                             //去HMS取控制指令，并上报结果，再把状态给回去
                             WaterPurifierControlClass().createRequest(macAddress, arrayResult[0], arrayResult[1])
                         }
