@@ -9,13 +9,17 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 
+/***
+ * @author Duo.Cui
+ * MainClass
+ */
 public class MainClass {
     private static final Logger logger = LoggerFactory.getLogger(MainClass.class);
 
     public static void main(String[] args) {
 //        File file = new File("/MyData/queen2/result.txt");
 //        File file = new File("/data/queen7/result.txt");
-        File file = new File("/Users/cuiduo/Downloads/result.txt");    //存放生成的机器相关属性
+        File file = new File("/Users/cuiduo/Downloads/result.txt");    //存放生成的机器相关属性的文件
 //        File file = new File("/home/iot/MyData/machine/result.txt");
         PrintStream ps = null;
         try {
@@ -30,11 +34,6 @@ public class MainClass {
                 String text = "FS-E85E-W:" + macAddress;
                 ps.println(text);
                 HeartBeatsClient client = new HeartBeatsClient(macAddress);
-
-//bootstrap和EventLoopGroup的复用测试
-//                Bootstrap bootstrap = new Bootstrap();
-//                EventLoopGroup group = new NioEventLoopGroup(1);
-//                HeartBeatsClientTest client = new HeartBeatsClientTest(macAddress,bootstrap,group);
                 client.start();
                 Thread.sleep(10);
             } catch (InterruptedException e) {

@@ -10,6 +10,9 @@ import org.dom4j.Element
 import org.slf4j.LoggerFactory
 import utils.Util
 
+/***
+ * client 消息处理handler
+ */
 class WaterPurifierMessageHandler(private val macAddress: String): SimpleChannelInboundHandler<String>() {
     val logger = LoggerFactory.getLogger(javaClass.simpleName)!!
     lateinit var arrayResult: Array<String>

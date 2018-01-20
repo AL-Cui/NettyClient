@@ -18,7 +18,8 @@ import javax.net.ssl.SSLEngine;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 重连检测狗，当发现当前的链路不稳定关闭之后，进行12次重连
+ * @author Duo.Cui
+ * 重连检测类，当发现当前的链路不稳定关闭之后，进行12次重连
  */
 @Sharable
 public abstract class ConnectionWatchdog extends ChannelInboundHandlerAdapter implements TimerTask, ChannelHandlerHolder {
@@ -57,6 +58,11 @@ public abstract class ConnectionWatchdog extends ChannelInboundHandlerAdapter im
         ctx.fireChannelActive();
     }
 
+    /***
+     * 连接关闭时启动重连
+     * @param ctx
+     * @throws Exception
+     */
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         logger.info("链接关闭");
@@ -72,7 +78,11 @@ public abstract class ConnectionWatchdog extends ChannelInboundHandlerAdapter im
         ctx.fireChannelInactive();
     }
 
-
+    /***
+     * 执行具体的重连动作
+     * @param timeout
+     * @throws Exception
+     */
     public void run(Timeout timeout) throws Exception {
 
         ChannelFuture future;

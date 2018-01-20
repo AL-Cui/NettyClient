@@ -12,6 +12,10 @@ import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.TrustManager
 
+/***
+ * @author Duo.Cui
+ * 机器状态上报类
+ */
 class WaterPurifierMachineLogin {
     val logger = LoggerFactory.getLogger(javaClass.simpleName)!!
     private val MEDIA_XML_APPLICATION = MediaType.parse("application/xml;gzip;keep-alive")
@@ -35,7 +39,10 @@ class WaterPurifierMachineLogin {
             return sslSocketFactory!!
         }
     }
-
+    /***
+     * 创建OkHttpClient
+     * @return OkHttpClient
+     */
     private fun createOKHttpClient(): OkHttpClient {
         var mBuilder = OkHttpClient.Builder()
         mBuilder.sslSocketFactory(WaterPurifierMachineLogin.createSSLSocketFactory())
@@ -43,7 +50,7 @@ class WaterPurifierMachineLogin {
         mBuilder.cookieJar(object : CookieJar {
             private val cookieStore = HashMap<HttpUrl, List<Cookie>>()
             override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
-                cookieStore.put(url, cookies)
+                cookieStore[url] = cookies
 
             }
 
@@ -55,21 +62,12 @@ class WaterPurifierMachineLogin {
         return mBuilder.build()
     }
 
-//    private var mOkHttpClient = OkHttpClient.Builder()
-//            .cookieJar(object : CookieJar {
-//                private val cookieStore = HashMap<HttpUrl, List<Cookie>>()
-//
-//                override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
-//                    cookieStore.put(url, cookies)
-//                }
-//
-//                override fun loadForRequest(url: HttpUrl): List<Cookie> {
-//                    val cookies = cookieStore[url]
-//                    return cookies ?: ArrayList()
-//                }
-//            })
-//            .build()
-
+    /***
+     * 机器上报Http请求
+     * @param macId
+     * @param boxId
+     * @param pass
+     */
     fun createRequest(macId: String, boxId: String, pass: String) {
 
         val requestString = setXmlInfo(macId, boxId, pass)
@@ -103,7 +101,13 @@ class WaterPurifierMachineLogin {
 
     }
 
-
+    /***
+     * 编辑Http请求所需的xml数据
+     * @param idString
+     * @param boxId
+     * @param passString
+     * @return writeDoc.asXML()
+     */
     private fun setXmlInfo(idString: String, boxId: String, passString: String): String {
         val writeDoc = DocumentHelper.createDocument()
         val root = writeDoc.addElement(Util.CMONITORING)

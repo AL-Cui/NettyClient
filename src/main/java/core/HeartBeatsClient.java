@@ -27,6 +27,10 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 
+/***
+ * @author Duo.Cui
+ * Netty Client类
+ */
 public class HeartBeatsClient extends Thread {
     private static final String Url = "iotwater-rd.smart-blink.com";
     public static final Logger logger = LoggerFactory.getLogger(HeartBeatsClient.class);
@@ -42,6 +46,12 @@ public class HeartBeatsClient extends Thread {
     private Bootstrap boot;
     private ConnectorIdleStateTrigger idleStateTrigger;
 
+    /***
+     * 创建客户端和服务端连接
+     * @param port
+     * @param host
+     * @throws Exception
+     */
     public void connect(int port, String host) throws Exception {
         idleStateTrigger = new ConnectorIdleStateTrigger(macAddress);
         logger.info(macAddress);

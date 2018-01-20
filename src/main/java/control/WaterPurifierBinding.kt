@@ -6,15 +6,16 @@ import org.slf4j.LoggerFactory
 import utils.Util
 import java.io.IOException
 import java.security.SecureRandom
-import java.security.cert.CertificateException
-import java.security.cert.X509Certificate
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.Arrays
 import java.security.KeyStore
 import javax.net.ssl.*
 
-
+/***
+ * @author Duo.Cui
+ * 机器绑定类
+ */
 class WaterPurifierBinding {
     val logger = LoggerFactory.getLogger(javaClass.simpleName)!!
     private val MEDIA_XML_APPLICATIOON = MediaType.parse("application/xml;charset=utf-8")
@@ -40,7 +41,10 @@ class WaterPurifierBinding {
     }
 
     var resultList: Array<String> = Array(2, { "" })
-
+    /***
+     * 创建OkHttpClient
+     * @return OkHttpClient
+     */
     private fun createOKHttpClient(): OkHttpClient {
         val trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
         trustManagerFactory.init(null as KeyStore?)
@@ -71,21 +75,12 @@ class WaterPurifierBinding {
         })
         return mBuilder.build()
     }
-//    private val mOkHttpClient = OkHttpClient.Builder()
-//            .cookieJar(object : CookieJar {
-//                private val cookieStore = HashMap<HttpUrl, List<Cookie>>()
-//                override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
-//                    cookieStore.put(url, cookies)
-//
-//                }
-//
-//                override fun loadForRequest(url: HttpUrl): List<Cookie> {
-//                    val cookies = cookieStore[url]
-//                    return cookies ?: ArrayList()
-//                }
-//            })
-//            .build()
 
+    /***
+     * 绑定过程中的第一次Http请求,创建boxId
+     * @param macId
+     * @return resultList
+     */
     fun boxIDCreateFirstRequest(macId: String): Array<String> {
 
         val postString = setXmlInfo1(macId)
@@ -121,7 +116,12 @@ class WaterPurifierBinding {
         return resultList
     }
 
-
+    /***
+     * 绑定过程中的第二次Http请求，创建passString、centerAddress
+     * @param boxId
+     * @param macId
+     * @return passString
+     */
     fun boxIdCreateSecondRequest(boxId: String, macId: String): String {
         var passString = ""
         val postString = setXmlInfo2(macId, boxId)
@@ -155,7 +155,13 @@ class WaterPurifierBinding {
         })
         return passString
     }
-
+    /***
+     * 绑定过程中的第三次Http请求
+     * @param macId
+     * @param pass
+     * @param boxId
+     * @param centerAddress
+     */
     private fun passCreateThirdRequest(pass: String, macId: String, boxId: String, centerAddress: String) {
         val postString = setXmlInfo3(macId, pass, centerAddress)
 
@@ -187,6 +193,11 @@ class WaterPurifierBinding {
 
     }
 
+    /***
+     * 根据第一次Http请求返回的xml解析出boxId
+     * @param XMLString
+     * @return boxId
+     */
     fun parserXmlId(XMLString: String): String {
 
         var boxId = ""
@@ -210,7 +221,9 @@ class WaterPurifierBinding {
     }
 
     /**
-     * 根据返回的xml解析出pass
+     * 根据第二次请求返回的xml解析出pass、centerAddress
+     * @param XMLString
+     * @return secondResultList
      */
     fun parserXmlpass(XMLString: String): Array<String> {
 
@@ -238,6 +251,11 @@ class WaterPurifierBinding {
         return secondResultList
     }
 
+    /***
+     * 编辑第一次Http请求所需的xml
+     * @param idString
+     * @return writeDoc.asXML()
+     */
     private fun setXmlInfo1(idString: String): String {
         val writeDoc = DocumentHelper.createDocument()
         val root = writeDoc.addElement(Util.MONITORING)
@@ -265,7 +283,12 @@ class WaterPurifierBinding {
         return writeDoc.asXML()
     }
 
-
+    /***
+     * 编辑第二次Http请求所需的xml
+     * @param idString
+     * @param boxId
+     * @return writeDoc.asXML()
+     */
     private fun setXmlInfo2(idString: String, boxId: String): String {
         val writeDoc = DocumentHelper.createDocument()
         val root = writeDoc.addElement(Util.MONITORING)
@@ -296,8 +319,12 @@ class WaterPurifierBinding {
     }
 
 
-    /**
-     * 根据第二次返回的pass，第三次发送：带pass的xml
+    /***
+     * 编辑第三次Http请求所需的xml
+     * @param idString
+     * @param passString
+     * @param centerAddress
+     * @return writeDoc.asXML()
      */
     private fun setXmlInfo3(idString: String, passString: String, centerAddress: String): String {
         val writeDoc = DocumentHelper.createDocument()

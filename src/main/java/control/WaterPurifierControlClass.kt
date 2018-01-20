@@ -13,6 +13,10 @@ import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.TrustManager
 
+/***
+ * @author Duo.Cui
+ * 控制功能类
+ */
 class WaterPurifierControlClass {
     val logger = LoggerFactory.getLogger(javaClass.simpleName)!!
     private val MEDIA_XML_APPLICATION = MediaType.parse("application/xml;gzip;keep-alive")
@@ -38,7 +42,10 @@ class WaterPurifierControlClass {
     }
 
     var commandList = Array(3, { "" })
-
+    /***
+     * 创建OkHttpClient
+     * @return OkHttpClient
+     */
     private fun createOKHttpClient(): OkHttpClient {
         var mBuilder = OkHttpClient.Builder()
         mBuilder.sslSocketFactory(WaterPurifierControlClass.createSSLSocketFactory())
@@ -59,6 +66,12 @@ class WaterPurifierControlClass {
         return mBuilder.build()
     }
 
+    /***
+     * 控制时第一个Http请求
+     * @param macId
+     * @param boxId
+     * @param pass
+     */
     fun createRequest(macId: String, boxId: String, pass: String) {
 
         val requestString = setXmlInfo(macId, boxId, pass)
@@ -98,7 +111,13 @@ class WaterPurifierControlClass {
 
     }
 
-
+    /***
+     * 控制时第二个Http请求
+     * @param macId
+     * @param boxId
+     * @param pass
+     * @param echo
+     */
     private fun waterPurifierCreateSecondRequest(macId: String, boxId: String, pass: String, echo: Array<String>) {
 
         val requestString = waterPurifierSetXmlInfo2(macId, boxId, pass, echo)
@@ -131,6 +150,14 @@ class WaterPurifierControlClass {
         })
     }
 
+    /***
+     * 编辑第二次Http请求时的xml数据
+     * @param macId
+     * @param boxId
+     * @param passString
+     * @param echo
+     * @return writeDoc.asXML()
+     */
     private fun waterPurifierSetXmlInfo2(macId: String, boxId: String, passString: String, echo: Array<String>): String {
         val writeDoc = DocumentHelper.createDocument()
         val root = writeDoc.addElement(Util.CMONITORING)
@@ -208,7 +235,13 @@ class WaterPurifierControlClass {
 
         return writeDoc.asXML()
     }
-
+    /***
+     * 编辑第一次Http请求时的xml数据
+     * @param idString
+     * @param boxId
+     * @param passString
+     * @return writeDoc.asXML()
+     */
     private fun setXmlInfo(idString: String, boxId: String, passString: String): String {
         val writeDoc = DocumentHelper.createDocument()
         val root = writeDoc.addElement(Util.CMONITORING)
@@ -240,7 +273,11 @@ class WaterPurifierControlClass {
         return writeDoc.asXML()
     }
 
-    // 解析第一次返回的XML
+    /***
+     * 解析第一次Http请求返回的xml数据
+     * @param XMLString
+     * @return commandList
+     */
     fun parserXmlId(XMLString: String): Array<String> {
 
 

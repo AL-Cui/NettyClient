@@ -10,6 +10,10 @@ import java.io.InputStream;
 import java.security.KeyStore;
 import java.util.Random;
 
+/***
+ * @author Duo.Cui
+ * 工具类
+ */
 public class Util {
     public static final String[] strings = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"};
     public static final int[] indexInt = {1, 3, 5, 7, 9, 11, 13, 15};

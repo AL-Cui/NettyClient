@@ -9,6 +9,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
+/***
+ * @author Duo.Cui
+ * client handler
+ */
 @Sharable
 public class HeartBeatClientHandler extends ChannelInboundHandlerAdapter {
 

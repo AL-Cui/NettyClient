@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import utils.Util;
 
 /***
+ * @author Duo.Cui
  * 心跳机制相关类
  */
 @Sharable
@@ -36,7 +37,7 @@ public class ConnectorIdleStateTrigger extends ChannelInboundHandlerAdapter {
         if (evt instanceof IdleStateEvent) {
             IdleState state = ((IdleStateEvent) evt).state();
             if (state == IdleState.WRITER_IDLE) {
-                    string = createHeartBeatxml(macAddress);
+                    string = createHeartBeatXml(macAddress);
                     ByteBuf HEARTBEAT_SEQUENCE = Unpooled.unreleasableBuffer(Unpooled.copiedBuffer(string+"\r\n",
                             CharsetUtil.UTF_8));
 
@@ -50,9 +51,9 @@ public class ConnectorIdleStateTrigger extends ChannelInboundHandlerAdapter {
     /***
      * 创建心跳xml
      * @param macAddress
-     * @return
+     * @return result
      */
-    public String createHeartBeatxml(String macAddress) {
+    public String createHeartBeatXml(String macAddress) {
         String result;
         Document writeDoc = DocumentHelper.createDocument();
         Element root = writeDoc.addElement(Util.NODE_TCP_MSG);
