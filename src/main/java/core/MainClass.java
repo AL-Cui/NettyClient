@@ -18,8 +18,9 @@ public class MainClass {
 
     public static void main(String[] args) {
 //        File file = new File("/MyData/queen2/result.txt");
-//        File file = new File("/data/queen7/result.txt");
-        File file = new File("/Users/cuiduo/Downloads/result.txt");    //存放生成的机器相关属性的文件
+        File file = new File("result.txt");
+//        File file = new File("/data/queen16/result.txt");
+//        File file = new File("/Users/cuiduo/Downloads/result.txt");    //存放生成的机器相关属性的文件
 //        File file = new File("/home/iot/MyData/machine/result.txt");
         PrintStream ps = null;
         try {
