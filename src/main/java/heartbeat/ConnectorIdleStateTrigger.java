@@ -8,6 +8,7 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.CharsetUtil;
+import io.netty.util.ReferenceCountUtil;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -42,6 +43,7 @@ public class ConnectorIdleStateTrigger extends ChannelInboundHandlerAdapter {
                             CharsetUtil.UTF_8));
 
                     ctx.writeAndFlush(HEARTBEAT_SEQUENCE.duplicate());
+                ReferenceCountUtil.release(HEARTBEAT_SEQUENCE);
             }
         } else {
             super.userEventTriggered(ctx, evt);

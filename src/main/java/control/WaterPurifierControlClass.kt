@@ -194,8 +194,8 @@ class WaterPurifierControlClass {
         echo1.addAttribute("node", macId)
 
         if (echo[echo.size - 1] != null) {
-            center_addr.text = echo[2]
-            logger.info("组装的指令中的centerAddress=" + echo[2])
+            center_addr.text = echo[1]
+            logger.info("组装的指令中的centerAddress=" + echo[1])
             if (echo[0].indexOf("f308") > 0) {
                 echo1.text = "01350105ff0171028000f300"
 

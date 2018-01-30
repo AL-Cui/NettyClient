@@ -4,6 +4,7 @@ import control.WaterPurifierBinding
 import control.WaterPurifierControlClass
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.SimpleChannelInboundHandler
+import io.netty.util.ReferenceCountUtil
 import org.dom4j.Document
 import org.dom4j.DocumentHelper
 import org.dom4j.Element
@@ -23,6 +24,7 @@ class WaterPurifierMessageHandler(private val macAddress: String): SimpleChannel
     override fun channelRead0(channelHandlerContext: ChannelHandlerContext, string: String) {
 //        logger.info("WaterPurifierMessageHandler拦截到的消息=" + string)
         readXML(string,channelHandlerContext)
+        ReferenceCountUtil.release(string)
     }
 
     override fun exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable) {
@@ -72,7 +74,7 @@ class WaterPurifierMessageHandler(private val macAddress: String): SimpleChannel
                             if (logger.isDebugEnabled) {
                                 logger.debug("收到控制指令")
                             }
-                            //睡眠200ms
+                            //睡眠50ms
                             Thread.sleep(50)
                             //去HMS取控制指令，并上报结果，再把状态给回去
                             WaterPurifierControlClass().createRequest(macAddress, arrayResult[0], arrayResult[1])
