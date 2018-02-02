@@ -23,8 +23,7 @@ class WaterPurifierMessageHandler(private val macAddress: String): SimpleChannel
 
     override fun channelRead0(channelHandlerContext: ChannelHandlerContext, string: String) {
 //        logger.info("WaterPurifierMessageHandler拦截到的消息=" + string)
-        readXML(string,channelHandlerContext)
-        ReferenceCountUtil.release(string)
+            readXML(string,channelHandlerContext)
     }
 
     override fun exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable) {

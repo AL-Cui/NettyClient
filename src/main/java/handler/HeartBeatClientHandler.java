@@ -32,9 +32,14 @@ public class HeartBeatClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        String message = (String) msg;
-        logger.info("HeartBeatClientHandler拦截到的消息=" + message);
-        ctx.fireChannelRead(msg);     //将信息继续往下传至其他Handler，把原消息往下传，那不用做什么释放
+        try {
+            String message = (String) msg;
+            logger.info("HeartBeatClientHandler拦截到的消息=" + message);
+            ctx.fireChannelRead(msg);     //由于把msg消息转成String就往下传，所以此处要释放
+        }finally {
+            ReferenceCountUtil.release(msg);
+        }
+
     }
 
     @Override

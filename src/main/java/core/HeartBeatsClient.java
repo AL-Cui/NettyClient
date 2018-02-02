@@ -116,7 +116,7 @@ public class HeartBeatsClient extends Thread {
 //            connect(port, "127.0.0.1");
 //        connect(port, "10.191.200.128");
 //        connect(port, ipAddress);
-//        connect(port, "123.56.157.215");
+//        connect(port, "45.76.221.2");
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (Exception e) {
